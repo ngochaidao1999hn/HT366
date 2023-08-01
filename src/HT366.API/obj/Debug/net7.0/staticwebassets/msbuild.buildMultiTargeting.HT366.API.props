@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\HT366.API.props" />
+</Project>

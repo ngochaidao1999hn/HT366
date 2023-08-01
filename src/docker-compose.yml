@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  ht366.api:
+    image: ${DOCKER_REGISTRY-}ht366api
+    build:
+      context: .
+      dockerfile: HT366.API/Dockerfile
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development 
