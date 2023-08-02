@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HT366.Application.Dtos.Category;
 using HT366.Application.Dtos.Exam;
+using HT366.Application.Dtos.File;
 using HT366.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace HT366.Application.Mapper
         {
             CreateMap<CreateExamDto, Exam>();
             CreateMap<Exam, ExamReadDto>();
+            CreateMap<Domain.Entities.File, FileReadDto>();
             CreateMap<CategoryCreateDto, Category>();
         }
     }

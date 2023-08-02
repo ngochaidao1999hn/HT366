@@ -14,6 +14,6 @@ namespace HT366.Application.Dtos.Exam
         public string Description { get; set; } = default!;
         public string Content { get; set; } = default!;
         public StatusEnum Status { get; set; }
-        public List<FileReadDto>? Files { get; set; }
+        public IEnumerable<FileReadDto>? Files { get; set; }
     }
 }

@@ -41,7 +41,7 @@ namespace HT366.API.Controllers
         {
             try
             {
-                return Ok(await _examService.GetAll(includeProperties: new string[] {"File"}));
+                return Ok(await _examService.GetAll(includeProperties: new string[] {"Files"}));
             }
             catch (Exception ex) 
             {
