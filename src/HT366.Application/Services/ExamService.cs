@@ -43,9 +43,13 @@ namespace HT366.Application.Services
             return true;
         }
 
-        public async Task<IEnumerable<ExamReadDto>> GetAll(Expression<Func<Exam, bool>>? filter = null, string[]? includeProperties = null)
+        public async Task<IEnumerable<ExamReadDto>> GetAll(GetExamFilter filter)
         {
-            var exams = await _unitOfWork.examRepository.GetAsync(filter, includeProperties);
+            var exams = await _unitOfWork.examRepository.GetAsync(
+                x => (filter.Name == null || x.Name.Contains(filter.Name)) &&
+                (filter.Description == null || x.Description.Contains(filter.Description)) &&
+                (filter.CreateDate == null || DateOnly.FromDateTime(x.CreatedDate) == filter.CreateDate), 
+                includeProperties: new string[] { "Files" });
             return _mapper.Map<IEnumerable<ExamReadDto>>(exams);
         }
 

@@ -14,6 +14,6 @@ namespace HT366.Application.Services
         Task<Guid> Insert(CreateExamDto ex);
         Task<Guid> Update(Exam ex);
         Task<bool> Delete(Guid Id);
-        Task<IEnumerable<ExamReadDto>> GetAll(Expression<Func<Exam, bool>>? filter = null, string[]? includeProperties = null);
+        Task<IEnumerable<ExamReadDto>> GetAll(GetExamFilter filter);
     }
 }

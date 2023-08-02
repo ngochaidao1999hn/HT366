@@ -37,11 +37,11 @@ namespace HT366.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetExams()
+        public async Task<IActionResult> GetExams([FromQuery] GetExamFilter filter)
         {
             try
             {
-                return Ok(await _examService.GetAll(includeProperties: new string[] {"Files"}));
+                return Ok(await _examService.GetAll(filter));
             }
             catch (Exception ex) 
             {
