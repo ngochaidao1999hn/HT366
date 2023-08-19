@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace HT366.Infrastructure.Services
@@ -14,19 +15,16 @@ namespace HT366.Infrastructure.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
-        private readonly IAuthorizationService _authorizationService;
         private readonly IConfiguration _configuration;
 
         public IdentityService(UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
-            IAuthorizationService authorizationService,
             IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
-            _authorizationService = authorizationService;
             _configuration = configuration;
 
         }
@@ -79,7 +77,14 @@ namespace HT366.Infrastructure.Services
                 if (await _userManager.CheckPasswordAsync(user, password))
                 {
                     var userClaimPrincipals = await _userClaimsPrincipalFactory.CreateAsync(user);
-                    var claims = userClaimPrincipals.Claims;
+                    var claims = new List<Claim>();
+                    claims.Add(new Claim("UserId", user.Id.ToString()));
+                    claims.Add(new Claim("Email", user.Email ?? ""));
+                    claims.Add(new Claim("UserName", user.UserName ?? ""));
+                    foreach (var role in await _userManager.GetRolesAsync(user))
+                    {
+                        claims.Add(new Claim("Role", role));
+                    }
                     var issuer = _configuration["JWT:Issuer"];
                     var audience = _configuration["JWT:Audience"];
                     var securityKey = new SymmetricSecurityKey
@@ -113,5 +118,9 @@ namespace HT366.Infrastructure.Services
             return result.Succeeded;
         }
 
+        public async Task<ApplicationUser?> GetByIdAsync(Guid userId)
+        {
+           return await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
+        }
     }
 }

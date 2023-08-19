@@ -16,6 +16,8 @@ namespace HT366.Infrastructure.Services
         Task<bool> DeleteUserAsync(Guid userId);
 
         Task<List<ApplicationUser>> GetListUsers();
+
+        Task<ApplicationUser?> GetByIdAsync(Guid userId);
     }
 }
 

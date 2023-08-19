@@ -12,5 +12,6 @@ namespace HT366.Application.Services
     {
         Task<Category?> GetById(Guid Id);
         Task<Category> Insert(CategoryCreateDto request);
+        Task<IEnumerable<Category>> GetAll();
     }
 }

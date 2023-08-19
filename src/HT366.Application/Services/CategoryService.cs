@@ -19,6 +19,12 @@ namespace HT366.Application.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
+        public async Task<IEnumerable<Category>> GetAll()
+        {
+            return await _unitOfWork.categoryRepository.GetAsync();
+        }
+
         public async Task<Category?> GetById(Guid Id)
         {
             return await _unitOfWork.categoryRepository.GetByIdAsync(Id);

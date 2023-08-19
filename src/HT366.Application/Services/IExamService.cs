@@ -11,9 +11,10 @@ namespace HT366.Application.Services
 {
     public interface IExamService
     {
-        Task<Guid> Insert(CreateExamDto ex);
+        Task<Guid> Insert(Guid userId, CreateExamDto ex);
         Task<Guid> Update(Exam ex);
-        Task<bool> Delete(Guid Id);
+        Task<bool> Delete(Guid id);
         Task<IEnumerable<ExamReadDto>> GetAll(GetExamFilter filter);
+        Task<ExamReadDto?> GetById(Guid id);
     }
 }

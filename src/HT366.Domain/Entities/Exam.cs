@@ -15,5 +15,7 @@ namespace HT366.Domain.Entities
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeleteTime { get; set; }
         public List<File>? Files { get; set; }
+        public Guid CreatedBy { get; set; }
+        public ApplicationUser User { get; set; } = default!;
     }
 }

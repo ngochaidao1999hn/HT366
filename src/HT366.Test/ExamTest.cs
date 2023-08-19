@@ -8,6 +8,8 @@ using HT366.Domain.Entities;
 using HT366.Domain.Interfaces;
 using HT366.Infrastructure.Services;
 using HT366.Test.Utils;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Moq;
 
 namespace HT366.Test
@@ -16,11 +18,17 @@ namespace HT366.Test
     {
         private readonly Fixture fixture = new();
         private readonly Mock<IUnitOfWork> unitOfWork = new();
+        private readonly Mock<UserManager<ApplicationUser>> userManager = new();
+        private readonly Mock<RoleManager<ApplicationRole>> roleManager = new();
+        private readonly Mock<IUserClaimsPrincipalFactory<ApplicationUser>> userCLaimPrincipal = new();
+        private readonly Mock<IConfiguration> config = new();
         private readonly MockRepository<Exam> examRepository = new();
         private readonly MockRepository<Category> categoryRepository = new();
         private ExamService examService;
         private CategoryService categoryService;
         private FileService fileService;
+        private UserService userService;
+        private IdentityService identityService;
 
         #region Init
         public ExamTest()
@@ -33,7 +41,9 @@ namespace HT366.Test
             IMapper mapper = new Mapper(configuration);
             categoryService = new CategoryService(unitOfWork.Object, mapper);
             fileService = new FileService();
-            examService = new ExamService(unitOfWork.Object, mapper, categoryService, fileService);
+            identityService = new IdentityService(userManager.Object, roleManager.Object, userCLaimPrincipal.Object, config.Object);
+            userService = new UserService(identityService);
+            examService = new ExamService(unitOfWork.Object, mapper, categoryService, fileService, userService);
         }
         #endregion
 

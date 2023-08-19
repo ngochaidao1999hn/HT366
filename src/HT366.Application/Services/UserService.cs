@@ -1,4 +1,5 @@
 ﻿using HT366.Application.Dtos.Identity;
+using HT366.Domain.Entities;
 using HT366.Infrastructure.Services;
 
 namespace HT366.Application.Services
@@ -17,6 +18,11 @@ namespace HT366.Application.Services
             res.AccessToken = authRes.Item1;
             res.ExpiredDate = authRes.Item2;
             return res;
+        }
+
+        public async Task<ApplicationUser?> GetByIdAsync(Guid Id)
+        {
+            return await _identityService.GetByIdAsync(Id);
         }
 
         public async Task Register(RegisterDto dto)

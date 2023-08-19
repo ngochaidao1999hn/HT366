@@ -22,7 +22,10 @@ namespace HT366.Infrastructure.Persistence
             builder.Entity<Category>()
             .HasQueryFilter(c => !c.IsDeleted);
             builder.Entity<Exam>()
-            .HasQueryFilter(c => !c.IsDeleted);
+            .HasQueryFilter(c => !c.IsDeleted)
+            .HasOne(c => c.User)
+            .WithMany(u => u.Exams)
+            .HasForeignKey(c => c.CreatedBy);
             builder.Entity<Exercise>()
             .HasQueryFilter(c => !c.IsDeleted);
             builder.Entity<Lesson>()

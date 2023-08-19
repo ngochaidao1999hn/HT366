@@ -7,9 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HT366.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ExamController : ControllerBase
+    public class ExamController : BaseController
     {
         private readonly IExamService _examService;
         public ExamController(IExamService examService)
@@ -18,12 +16,13 @@ namespace HT366.API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> PostExam([FromBody] CreateExamDto dto)
         {
             try
             {
-                var newExamId = await _examService.Insert(dto);
+                var userId = GetUserId();
+                var newExamId = await _examService.Insert(userId, dto);
                 return Ok(newExamId);
             }
             catch (ResourceNotFoundException rsnf)
@@ -33,7 +32,26 @@ namespace HT366.API.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
-            }        
+            }
+        }
+
+        [HttpPost("{id}/verify")]
+        public async Task<IActionResult> VerifyExam(Guid id, [FromBody] ExamApprovalDto dto)
+        {
+            try
+            {
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetExamById(Guid id)
+        {
+            return Ok(await _examService.GetById(id));
         }
 
         [HttpGet]
@@ -44,6 +62,30 @@ namespace HT366.API.Controllers
                 return Ok(await _examService.GetAll(filter));
             }
             catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteExam(Guid id)
+        {
+            try
+            {
+                var userId = GetUserId();
+                var exam = await _examService.GetById(id);
+                if (exam is null)
+                {
+                    return NotFound("Exam Not Found");
+                }
+                if (exam.CreatedBy != userId)
+                {
+                    return Forbid();
+                }
+                await _examService.Delete(exam.Id);
+                return Ok();
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
