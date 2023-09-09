@@ -5,7 +5,6 @@ using HT366.Domain.Entities;
 using HT366.Domain.Interfaces;
 using HT366.Infrastructure.Services;
 using HT366.Infrastructure.Utils.Exceptions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace HT366.Application.Services
 {
@@ -16,6 +15,7 @@ namespace HT366.Application.Services
         private readonly ICategoryService _categoryService;
         private readonly IFileService _fileService;
         private readonly IUserService _userService;
+
         public ExamService(IUnitOfWork unitOfWork,
             IMapper mapper,
             ICategoryService categoryService,
@@ -28,11 +28,12 @@ namespace HT366.Application.Services
             _fileService = fileService;
             _userService = userService;
         }
+
         public async Task<bool> Delete(Guid id)
         {
             var exam = await _unitOfWork.examRepository.GetByIdAsync(id);
             if (exam is ISoftDeleted)
-            { 
+            {
                 exam.IsDeleted = true;
                 exam.DeleteTime = DateTime.UtcNow;
                 _unitOfWork.examRepository.Update(exam);
@@ -52,7 +53,7 @@ namespace HT366.Application.Services
                 (filter.Status == null || x.Status == filter.Status) &&
                 (filter.Level == null || x.Level == filter.Level) &&
                 (filter.CateId == null || x.CategoryId == filter.CateId) &&
-                (filter.CreatedBy == null || x.User.UserName.Contains(filter.CreatedBy)), 
+                (filter.CreatedBy == null || x.User.UserName.Contains(filter.CreatedBy)),
                 includeProperties: new string[] { "Files", "User" });
 
             var totalCount = exams.Count();
@@ -84,7 +85,7 @@ namespace HT366.Application.Services
                 if (category is null)
                 {
                     throw new ResourceNotFoundException($"Category with Id {ex.CateId} not found");
-                }               
+                }
                 var exam = _mapper.Map<Exam>(ex);
                 exam.CreatedBy = user.Id;
                 exam.User = user;
@@ -106,7 +107,7 @@ namespace HT366.Application.Services
                 return newExam.Id;
             }
             catch (Exception exception)
-            { 
+            {
                 await _unitOfWork.RollBackTransactionAsync();
                 throw new Exception(exception.Message);
             }

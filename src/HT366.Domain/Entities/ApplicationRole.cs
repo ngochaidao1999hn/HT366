@@ -2,7 +2,7 @@
 
 namespace HT366.Domain.Entities
 {
-    public class ApplicationRole: IdentityRole<Guid>
+    public class ApplicationRole : IdentityRole<Guid>
     {
     }
 }

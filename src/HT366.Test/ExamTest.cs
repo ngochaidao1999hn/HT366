@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using AutoMapper;
-using HT366.Application.Dtos.Exam;
 using HT366.Application.Mapper;
 using HT366.Application.Services;
 using HT366.Domain.Common.Enums;
@@ -31,6 +30,7 @@ namespace HT366.Test
         private IdentityService identityService;
 
         #region Init
+
         public ExamTest()
         {
             unitOfWork.Setup(uow => uow.examRepository).Returns(examRepository);
@@ -45,9 +45,11 @@ namespace HT366.Test
             userService = new UserService(identityService);
             examService = new ExamService(unitOfWork.Object, mapper, categoryService, fileService, userService);
         }
-        #endregion
+
+        #endregion Init
 
         #region CreateData
+
         private async Task<Category> CreateCategory()
         {
             var cate = fixture.Build<Category>()
@@ -76,9 +78,11 @@ namespace HT366.Test
                 .With(x => x.Status, StatusEnum.Pending)
                 .Create();
         }
-        #endregion
+
+        #endregion CreateData
 
         #region Test
+
         [Fact]
         public async Task Add_Exam_Success()
         {
@@ -88,6 +92,7 @@ namespace HT366.Test
 
             //Assert.Equal(exam.Id, res);
         }
-        #endregion
+
+        #endregion Test
     }
 }

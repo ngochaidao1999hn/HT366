@@ -2,14 +2,14 @@
 using HT366.Domain.Interfaces;
 using HT366.Infrastructure.Persistence;
 using HT366.Infrastructure.Persistence.Repositories;
+using HT366.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore.Design;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using HT366.Infrastructure.Services;
+using System.Text;
 
 namespace HT366.Infrastructure
 {
@@ -29,7 +29,7 @@ namespace HT366.Infrastructure
             //services.AddScoped(typeof(ICachingService<>), typeof(CachingService<>));
             services.AddIdentity<ApplicationUser, ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationContext>();
-           //services.AddScoped<IIdentityService, IdentityService>();
+            //services.AddScoped<IIdentityService, IdentityService>();
             //services.AddScoped<IProductService, ProductService>();
             services.AddAuthentication(option =>
             {

@@ -2,7 +2,7 @@
 
 namespace HT366.Domain.Entities
 {
-    public class Category: BaseEntity, ISoftDeleted
+    public class Category : BaseEntity, ISoftDeleted
     {
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;

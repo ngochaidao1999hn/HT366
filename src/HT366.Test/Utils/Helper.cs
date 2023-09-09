@@ -3,12 +3,7 @@ using HT366.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HT366.Test.Utils
 {
@@ -16,9 +11,10 @@ namespace HT366.Test.Utils
     {
         private static readonly Fixture fixture = new();
         private static Guid id;
+
         public static Guid GenerateId()
         {
-           id = new Guid();
+            id = new Guid();
             return id;
         }
 

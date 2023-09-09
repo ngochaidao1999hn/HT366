@@ -20,4 +20,3 @@ namespace HT366.Infrastructure.Services
         Task<ApplicationUser?> GetByIdAsync(Guid userId);
     }
 }
-

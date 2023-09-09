@@ -7,10 +7,12 @@ namespace HT366.Application.Services
     public class UserService : IUserService
     {
         private readonly IIdentityService _identityService;
+
         public UserService(IIdentityService identityService)
         {
             _identityService = identityService;
         }
+
         public async Task<AuthenticationReadDto> Authorize(LoginDto dto)
         {
             var res = new AuthenticationReadDto();
@@ -28,10 +30,10 @@ namespace HT366.Application.Services
         public async Task Register(RegisterDto dto)
         {
             var res = await _identityService.CreateUserAsync(dto.Email, dto.Password);
-            if (!res.Succeeded) 
+            if (!res.Succeeded)
             {
                 throw new Exception(res?.Errors?.FirstOrDefault()?.Description);
-            }           
+            }
         }
     }
 }

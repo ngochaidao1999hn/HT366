@@ -3,7 +3,7 @@ using HT366.Domain.Common.Enums;
 
 namespace HT366.Domain.Entities
 {
-    public class Exercise: BaseEntity, ISoftDeleted
+    public class Exercise : BaseEntity, ISoftDeleted
     {
         public Guid CategoryId { get; set; }
         public Category Category { get; set; } = default!;

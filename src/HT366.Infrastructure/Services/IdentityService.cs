@@ -1,5 +1,4 @@
 ﻿using HT366.Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -26,8 +25,8 @@ namespace HT366.Infrastructure.Services
             _roleManager = roleManager;
             _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
             _configuration = configuration;
-
         }
+
         public async Task<List<ApplicationUser>> GetListUsers()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -120,7 +119,7 @@ namespace HT366.Infrastructure.Services
 
         public async Task<ApplicationUser?> GetByIdAsync(Guid userId)
         {
-           return await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            return await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using HT366.Domain.Entities;
 using HT366.Domain.Interfaces;
 using HT366.Infrastructure.Persistence;
+using HT366.Infrastructure.Persistence.Repositories;
 
 namespace HT366.Infrastructure
 {
@@ -14,25 +15,21 @@ namespace HT366.Infrastructure
         private bool disposedValue;
         private ApplicationContext _context { get; set; }
 
-        public UnitOfWork(ApplicationContext context,
-            IRepository<Exam> examRepository,
-            IRepository<Lesson> lessonRepository,
-            IRepository<Exercise> exerciseRepository,
-            IRepository<Category> categoryRepository,
-            IRepository<Domain.Entities.File> fileRepository)
+        public UnitOfWork(ApplicationContext context)
         {
             _context = context;
-            this.examRepository = examRepository;
-            this.lessonRepository = lessonRepository;
-            this.exerciseRepository = exerciseRepository;
-            this.categoryRepository = categoryRepository;
-            this.fileRepository = fileRepository;
+            this.examRepository = new Repository<Exam>(_context);
+            this.lessonRepository = new Repository<Lesson>(_context);
+            this.exerciseRepository = new Repository<Exercise>(_context);
+            this.categoryRepository = new Repository<Category>(_context);
+            this.fileRepository = new Repository<Domain.Entities.File>(_context);
         }
 
         public async Task<bool> CommitTransactionAsync(CancellationToken cancellationToken = default, Guid? internalCommandId = null)
         {
             if (await _context.SaveChangesAsync() > 0)
             {
+                await _context.Database.CommitTransactionAsync(cancellationToken);
                 return true;
             }
             return false;
@@ -50,6 +47,7 @@ namespace HT366.Infrastructure
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects)
+                    _context.Dispose();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override finalizer

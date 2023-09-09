@@ -2,7 +2,6 @@
 using HT366.Application.Services;
 using HT366.Infrastructure.Utils.Exceptions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HT366.API.Controllers
@@ -10,6 +9,7 @@ namespace HT366.API.Controllers
     public class ExamController : BaseController
     {
         private readonly IExamService _examService;
+
         public ExamController(IExamService examService)
         {
             _examService = examService;
@@ -61,7 +61,7 @@ namespace HT366.API.Controllers
             {
                 return Ok(await _examService.GetAll(filter));
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

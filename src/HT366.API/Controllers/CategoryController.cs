@@ -1,6 +1,5 @@
 ﻿using HT366.Application.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HT366.API.Controllers
@@ -9,6 +8,7 @@ namespace HT366.API.Controllers
     public class CategoryController : BaseController
     {
         private readonly ICategoryService _categoryService;
+
         public CategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
