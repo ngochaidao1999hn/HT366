@@ -25,6 +25,8 @@ namespace HT366.Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<ICachingService, CachingService>();
+            services.AddScoped<IEmailService, EmailService>();
             //services.AddScoped<IEmailService, EmailService>();
             //services.AddScoped(typeof(ICachingService<>), typeof(CachingService<>));
             services.AddIdentity<ApplicationUser, ApplicationRole>()
@@ -62,8 +64,9 @@ namespace HT366.Infrastructure
             });
             services.AddHangfireServer();
             //Config Redis for caching
-            services.AddStackExchangeRedisCache(options => { options.Configuration = Configuration["REDIS:ConnectionString"]; });
+
             */
+            services.AddStackExchangeRedisCache(options => { options.Configuration = Configuration["REDIS:ConnectionString"]; });
         }
 
         //Job Register
