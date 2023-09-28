@@ -32,6 +32,10 @@ namespace HT366.Application.Services
         public async Task<bool> Delete(Guid id)
         {
             var exam = await _unitOfWork.examRepository.GetByIdAsync(id);
+            if (exam is null)
+            {
+                return false;
+            }
             if (exam is ISoftDeleted)
             {
                 exam.IsDeleted = true;
@@ -90,7 +94,6 @@ namespace HT366.Application.Services
                 exam.CreatedBy = user.Id;
                 exam.User = user;
                 exam.CategoryId = category.Id;
-                exam.Category = category;
                 var newExam = await _unitOfWork.examRepository.CreateAsync(exam);
                 if (ex.Files is not null)
                 {

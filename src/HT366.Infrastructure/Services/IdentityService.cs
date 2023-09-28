@@ -54,7 +54,7 @@ namespace HT366.Infrastructure.Services
                 var defaultRole = await _roleManager.FindByNameAsync("client");
                 if (defaultRole is not null)
                 {
-                    await _userManager.AddToRoleAsync(user, defaultRole.Name);
+                    await _userManager.AddToRoleAsync(user, defaultRole.Name ?? "");
                 }
             }
             return result;
