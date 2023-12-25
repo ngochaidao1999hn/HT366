@@ -28,6 +28,7 @@ namespace HT366.Test
         private FileService fileService;
         private UserService userService;
         private IdentityService identityService;
+        private EmailService emailService;
 
         #region Init
 
@@ -38,12 +39,22 @@ namespace HT366.Test
 
             var myProfile = new MapperProfile();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+            var inMemorySettings = new Dictionary<string, string> {
+                {"TopLevelKey", "TopLevelValue"},
+                {"SectionName:SomeKey", "SectionValue"},
+                //...populate as needed for the test
+            };
+
+            //IConfiguration config = new ConfigurationBuilder()
+            //    .AddInMemoryCollection(inMemorySettings)
+            //    .Build();
             IMapper mapper = new Mapper(configuration);
             categoryService = new CategoryService(unitOfWork.Object, mapper);
             fileService = new FileService();
             identityService = new IdentityService(userManager.Object, roleManager.Object, userCLaimPrincipal.Object, config.Object);
             userService = new UserService(identityService);
-            examService = new ExamService(unitOfWork.Object, mapper, categoryService, fileService, userService);
+            emailService = new EmailService(config.Object);
+            examService = new ExamService(unitOfWork.Object, mapper, categoryService, fileService, userService, emailService);
         }
 
         #endregion Init

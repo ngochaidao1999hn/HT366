@@ -40,6 +40,7 @@ namespace HT366.API.Controllers
         {
             try
             {
+                await _examService.Verify(id, dto);
                 return Ok();
             }
             catch (Exception ex)

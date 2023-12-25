@@ -27,11 +27,8 @@ namespace HT366.Infrastructure
             services.AddScoped<IFileService, FileService>();
             services.AddScoped(typeof(ICachingService<>), typeof(CachingService<>));
             services.AddScoped<IEmailService, EmailService>();
-            //services.AddScoped<IEmailService, EmailService>();
-            //services.AddScoped(typeof(ICachingService<>), typeof(CachingService<>));
             services.AddIdentity<ApplicationUser, ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationContext>();
-            //services.AddScoped<IIdentityService, IdentityService>();
             //services.AddScoped<IProductService, ProductService>();
             services.AddAuthentication(option =>
             {

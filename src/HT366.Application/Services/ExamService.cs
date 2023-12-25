@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
 using HT366.Application.Dtos.Exam;
 using HT366.Domain.Common;
+using HT366.Domain.Common.Constant;
+using HT366.Domain.Common.Enums;
 using HT366.Domain.Entities;
 using HT366.Domain.Interfaces;
+using HT366.Infrastructure.EmailHelper;
 using HT366.Infrastructure.Services;
 using HT366.Infrastructure.Utils.Exceptions;
+using Serilog;
 
 namespace HT366.Application.Services
 {
@@ -15,18 +19,21 @@ namespace HT366.Application.Services
         private readonly ICategoryService _categoryService;
         private readonly IFileService _fileService;
         private readonly IUserService _userService;
+        private readonly IEmailService _emailService;
 
         public ExamService(IUnitOfWork unitOfWork,
             IMapper mapper,
             ICategoryService categoryService,
             IFileService fileService,
-            IUserService userService)
+            IUserService userService,
+            IEmailService emailService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _categoryService = categoryService;
             _fileService = fileService;
             _userService = userService;
+            _emailService = emailService;
         }
 
         public async Task<bool> Delete(Guid id)
@@ -70,9 +77,9 @@ namespace HT366.Application.Services
             return _mapper.Map<IEnumerable<ExamReadDto>>(exams);
         }
 
-        public async Task<ExamReadDto?> GetById(Guid Id)
+        public async Task<ExamReadDto?> GetById(Guid id)
         {
-            var exam = await _unitOfWork.examRepository.GetByIdAsync(Id);
+            var exam = await _unitOfWork.examRepository.GetByIdAsync(id);
             return _mapper.Map<ExamReadDto>(exam);
         }
 
@@ -121,6 +128,37 @@ namespace HT366.Application.Services
             _unitOfWork.examRepository.Update(ex);
             await _unitOfWork.CommitTransactionAsync();
             return ex.Id;
+        }
+
+        public async Task<bool> Verify(Guid id, ExamApprovalDto request)
+        {
+            try
+            {
+                var exam = await _unitOfWork.examRepository.GetByIdAsync(id);
+                if (exam is null)
+                    throw new Exception("Exam not exists");
+                if (exam.Status != StatusEnum.Pending)
+                    throw new Exception("Exam already be processed");
+                if (request.IsApproved)
+                {
+                    exam.Status = StatusEnum.Active;
+                }
+                else
+                {
+                    exam.RejectReason = request.RejectReason;
+                    exam.Status = StatusEnum.Inactive;
+                }
+                _unitOfWork.examRepository.Update(exam);
+                await _unitOfWork.CommitTransactionAsync();
+                await _emailService.Send(exam.User.Email!, Subjects.VerifyExamSuccessSubject, new { }, SengridEmailTemplateId.VerifyEmail);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                await _unitOfWork.RollBackTransactionAsync();
+                return false;
+            }
         }
     }
 }
