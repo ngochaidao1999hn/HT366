@@ -14,5 +14,7 @@ namespace HT366.Application.Services
         Task<IEnumerable<ExamReadDto>> GetAll(GetExamFilter filter);
 
         Task<ExamReadDto?> GetById(Guid id);
+
+        Task<bool> Verify(Guid id, ExamApprovalDto request);
     }
 }
